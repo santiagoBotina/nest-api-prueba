@@ -27,6 +27,7 @@ export type PaymentSource = {
     validity_ends_at: string;
     type: string;
   };
+  acceptance_token: string;
   token: string;
   type: string;
   status: string;

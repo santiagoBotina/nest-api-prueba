@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Ride" ADD COLUMN     "isFinished" INTEGER NOT NULL DEFAULT 0;

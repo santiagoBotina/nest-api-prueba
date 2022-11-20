@@ -1,3 +1,4 @@
+import { CreateTransactionDto } from './dto/create-transaction.dto';
 import * as dotenv from 'dotenv';
 dotenv.config();
 import { Injectable } from '@nestjs/common';
@@ -8,6 +9,21 @@ import { IWompiService, PaymentSource, TokenizedCard } from './interfaces';
 export class WompiService implements IWompiService {
   /***** Según la API de Wompi, hay que pedir el método de pago al usuario,
    en este caso se obvia este paso ya que siempre se va a usar tarjeta*****/
+  //Header con info de la llave privada
+  privConfig = {
+    headers: {
+      authorization: `Bearer ${process.env.PRIV_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+  };
+
+  //Request headers
+  pubConfig = {
+    headers: {
+      authorization: `Bearer ${process.env.PUB_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+  };
   /*
         Función para tokenizar la tarjeta del usuario
     */
@@ -20,19 +36,13 @@ export class WompiService implements IWompiService {
       exp_year: '29',
       card_holder: 'Pedro Pérez',
     };
-    //Request headers
-    const config = {
-      headers: {
-        authorization: `Bearer ${process.env.PUB_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-    };
+
     try {
       //Request to tokenize card
       const tokenizedRequest = await axios.post(
         `${process.env.WOMPI_API}/tokens/cards`,
         fakeCard,
-        config,
+        this.pubConfig,
       );
       //   console.log(tokenizedRequest.data);
       return tokenizedRequest.data;
@@ -63,21 +73,34 @@ export class WompiService implements IWompiService {
       customer_email: 'santiagoboe04@gmail.com',
       acceptance_token,
     };
-    //Header con info de la llave privada
-    const config = {
-      headers: {
-        authorization: `Bearer ${process.env.PRIV_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-    };
+
     //Request payment source
     const {
       data: { data },
     } = await axios.post(
       `${process.env.WOMPI_API}/payment_sources`,
       userData,
-      config,
+      this.privConfig,
     );
-    return data;
+    return {
+      acceptance_token,
+      ...data,
+    };
+  }
+
+  /* Función para iniciar una transacción */
+  async transactionInit(transactionDto: CreateTransactionDto) {
+    try {
+      const {
+        data: { data },
+      } = await axios.post(
+        `${process.env.WOMPI_API}/transactions`,
+        transactionDto,
+        this.privConfig,
+      );
+      return data;
+    } catch (e) {
+      return e;
+    }
   }
 }

@@ -4,7 +4,5 @@ import { DriversModule } from './drivers/drivers.module';
 
 @Module({
   imports: [UsersModule, DriversModule],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}

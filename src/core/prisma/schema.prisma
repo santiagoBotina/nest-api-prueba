@@ -12,22 +12,32 @@ datasource db {
 
 model Users {
   id                      Int    @id @default(autoincrement())
+  full_name               String
   email                   String
   wompi_payment_source_id Int
+  wompi_aceptance_token   String
+  ride                    Ride[]
 }
 
 model Drivers {
   id            Int    @id @default(autoincrement())
   name          String
   vehicle_model String
+  ride          Ride[]
 }
 
 model Ride {
-  id         Int      @id @default(autoincrement())
-  created_at DateTime @default(now())
-  init_lat   String
-  init_long  String
-  updated_at DateTime @updatedAt()
-  final_lat  String
-  final_long String
+  id             Int      @id @default(autoincrement())
+  created_at     DateTime @default(now())
+  init_lat       String
+  init_long      String
+  updated_at     DateTime @updatedAt()
+  final_lat      String
+  final_long     String
+  distance_in_km Float
+  isFinished     Int      @default(0)
+  Users          Users?   @relation(fields: [user_id], references: [id])
+  user_id        Int
+  Drivers        Drivers? @relation(fields: [driver_id], references: [id])
+  driver_id      Int
 }

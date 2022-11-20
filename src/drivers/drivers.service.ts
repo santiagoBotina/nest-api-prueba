@@ -1,26 +1,63 @@
 import { Injectable } from '@nestjs/common';
-import { CreateDriverDto } from './dto/create-driver.dto';
-import { UpdateDriverDto } from './dto/update-driver.dto';
+import { RideService } from 'src/ride/ride.service';
+import { WompiService } from 'src/Wompi/wompi.service';
+import { DriverRepository } from './repository/driver.repository';
+import * as randomstring from 'randomstring';
 
 @Injectable()
 export class DriversService {
-  create(createDriverDto: CreateDriverDto) {
-    return 'This action adds a new driver';
+  constructor(
+    private driverRepository: DriverRepository,
+    private rideService: RideService,
+    private wompiService: WompiService,
+  ) {}
+  //Encuentra un conductor al azar segun su ID
+  async findOne() {
+    const drivers = await this.driverRepository.findAll();
+    const randomDriver = drivers.sort(() => Math.random() - 0.5);
+    return randomDriver[0];
   }
 
-  findAll() {
-    return `This action returns all drivers`;
+  calculateTotalCostInCents(timeDifference: number, distance_in_km: number) {
+    const VAL_PER_KM = 1000;
+    const VAL_PER_MIN = 200;
+    const BASE_FEE = 3500;
+
+    const totalCost =
+      (BASE_FEE + VAL_PER_KM * distance_in_km + VAL_PER_MIN * timeDifference) *
+      100;
+
+    return totalCost;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} driver`;
-  }
+  async finishRide(id: number) {
+    const { created_at, updated_at, distance_in_km, user_id } =
+      await this.rideService.finishRide(id);
+    //Convirtiendo a minutos la diferencia entre los tiempos
+    let timeDifference =
+      (updated_at.getTime() - created_at.getTime()) / 1000 / 60;
+    timeDifference = Math.abs(Math.round(timeDifference));
 
-  update(id: number, updateDriverDto: UpdateDriverDto) {
-    return `This action updates a #${id} driver`;
-  }
+    const cost = this.calculateTotalCostInCents(timeDifference, distance_in_km);
+    const rideInfo = await this.rideService.getRideInfo(id);
 
-  remove(id: number) {
-    return `This action removes a #${id} driver`;
+    const reference = randomstring.generate();
+
+    const CREATE_TRANSACTION_DATA = {
+      amount_in_cents: cost,
+      currency: 'COP',
+      customer_email: rideInfo.Users.email,
+      payment_method: {
+        installments: 1,
+      },
+      reference,
+      payment_source_id: rideInfo.Users.wompi_payment_source_id,
+    };
+
+    const createTransaction = await this.wompiService.transactionInit(
+      CREATE_TRANSACTION_DATA,
+    );
+
+    return createTransaction;
   }
 }
