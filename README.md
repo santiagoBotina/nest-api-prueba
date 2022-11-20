@@ -24,6 +24,10 @@ $ yarn db:seed
 $ yarn start
 ```
 
+## Swagger Docs
+
+<a>http://localhost:3000/api</a>
+
 ## Tests
 
 ```bash
