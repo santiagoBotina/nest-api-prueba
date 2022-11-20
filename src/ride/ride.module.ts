@@ -1,6 +1,6 @@
-import { RideRepository } from 'src/ride/repository/ride-repository';
+import { RideRepository } from '../ride/repository/ride-repository';
 import { Module } from '@nestjs/common';
-import { PrismaModule } from 'src/core/prisma/prisma.module';
+import { PrismaModule } from '../core/prisma/prisma.module';
 import { RideService } from './ride.service';
 
 @Module({

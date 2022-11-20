@@ -69,7 +69,6 @@ export class RideService {
 
   async getRideInfo(id: number) {
     const result = await this.rideRepository.findFull(id);
-    console.log(result);
     return result;
   }
 }

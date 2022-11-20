@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { RideService } from 'src/ride/ride.service';
-import { WompiService } from 'src/Wompi/wompi.service';
+import { RideService } from '../ride/ride.service';
+import { WompiService } from '../Wompi/wompi.service';
 import { DriverRepository } from './repository/driver.repository';
 import * as randomstring from 'randomstring';
 

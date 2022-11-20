@@ -1,14 +1,11 @@
-import { UsersModule } from './../users/users.module';
-import { UserRepository } from './../users/repository/user.repository';
-import { UsersService } from 'src/users/users.service';
 import { Module } from '@nestjs/common';
 import { DriversService } from './drivers.service';
-import { PrismaModule } from 'src/core/prisma/prisma.module';
+import { PrismaModule } from '../core/prisma/prisma.module';
 import { DriverRepository } from './repository/driver.repository';
-import { RideService } from 'src/ride/ride.service';
-import { RideRepository } from 'src/ride/repository/ride-repository';
+import { RideService } from '../ride/ride.service';
+import { RideRepository } from '../ride/repository/ride-repository';
 import { DriversController } from './drivers.controller';
-import { WompiService } from 'src/Wompi/wompi.service';
+import { WompiService } from '../Wompi/wompi.service';
 
 @Module({
   imports: [PrismaModule],

@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common/exceptions';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'src/core/prisma/prisma.service';
+import { PrismaService } from '../../core/prisma/prisma.service';
 
 @Injectable()
 export class UserRepository {

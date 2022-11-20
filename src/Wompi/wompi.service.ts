@@ -44,7 +44,6 @@ export class WompiService implements IWompiService {
         fakeCard,
         this.pubConfig,
       );
-      //   console.log(tokenizedRequest.data);
       return tokenizedRequest.data;
     } catch (e) {
       return e;

@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { BadRequestException } from '@nestjs/common/exceptions';
-import { PrismaService } from 'src/core/prisma/prisma.service';
+import { PrismaService } from '../../core/prisma/prisma.service';
 import { InitRideDto } from '../dto/init-ride.dto';
 
 @Injectable()

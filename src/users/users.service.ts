@@ -3,10 +3,9 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { DriversService } from 'src/drivers/drivers.service';
-import { RideService } from 'src/ride/ride.service';
-import { WompiService } from 'src/Wompi/wompi.service';
-import { createPaymentDto } from './dto/create-payment-user.dto';
+import { DriversService } from '../drivers/drivers.service';
+import { RideService } from '../ride/ride.service';
+import { WompiService } from '../Wompi/wompi.service';
 import { RequestRideDto } from './dto/requestRideDto';
 import { UserRepository } from './repository/user.repository';
 
