@@ -16,9 +16,9 @@ export class UsersService {
     private userRepository: UserRepository,
     private rideService: RideService,
     private readonly driversService: DriversService,
-  ) {}
+  ) { }
 
-  async createPaymentMethod({ email, full_name }) {
+  async createPaymentMethod ({ email, full_name }) {
     //Tokenizar tarjeta
     const { data, status } = await this.wompiService.tokenizedCardUser();
     if (status !== 'CREATED') {
@@ -42,7 +42,7 @@ export class UsersService {
     return createUser;
   }
 
-  async requestRide(requestRide: RequestRideDto) {
+  async requestRide (requestRide: RequestRideDto) {
     const { email } = requestRide;
     //Como no se cuenta con un proceso de autenticación, se tomará la info del body
     //User
@@ -60,13 +60,24 @@ export class UsersService {
     return initRide;
   }
 
-  async findUser(id: number) {
+  async findUser (id: number) {
     const { wompi_payment_source_id, wompi_aceptance_token, email } =
       await this.userRepository.findById(id);
     return {
       wompi_payment_source_id,
       wompi_aceptance_token,
       email,
+    };
+  }
+
+  async findUserByEmail (userEmail: string) {
+    const { id, full_name, email, password } =
+      await this.userRepository.findOneUser(userEmail);
+    return {
+      id,
+      full_name,
+      email,
+      password
     };
   }
 }

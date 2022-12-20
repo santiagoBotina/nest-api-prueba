@@ -4,11 +4,11 @@ import { PrismaService } from '../../core/prisma/prisma.service';
 
 @Injectable()
 export class UserRepository {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   /*Este método solo toma el email enviado por el body para crear el usuario y guardar la informacion
   del metodo de pago*/
-  async createUser(
+  async createUser (
     email: string,
     full_name: string,
     idPaymentMethod: number,
@@ -33,23 +33,23 @@ export class UserRepository {
     return createUser;
   }
 
-  async findOneUser(email: string) {
+  async findOneUser (email: string) {
     const result = await this.prisma.users.findFirst({
       where: {
         email,
       },
     });
-    if (!result) throw new NotFoundException();
+    if (!result) throw new BadRequestException('No se encontró un usuario');
     return result;
   }
 
-  async findById(id: number) {
+  async findById (id: number) {
     const result = await this.prisma.users.findUnique({
       where: {
         id,
       },
     });
-    if (!result) throw new NotFoundException();
+    if (!result) throw new BadRequestException('No se encontró un usuario');
     return result;
   }
 }
