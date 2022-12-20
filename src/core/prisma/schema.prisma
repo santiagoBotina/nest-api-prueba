@@ -15,8 +15,8 @@ model Users {
   full_name               String
   email                   String
   password                String @default("")
-  wompi_payment_source_id Int
-  wompi_aceptance_token   String
+  wompi_payment_source_id Int    @default(0)
+  wompi_aceptance_token   String @default("")
   ride                    Ride[]
 }
 

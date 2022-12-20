@@ -1,3 +1,4 @@
+import { CreateuserDto } from './../auth/dto/createUser.dto';
 import {
   BadRequestException,
   Injectable,
@@ -8,6 +9,7 @@ import { RideService } from '../ride/ride.service';
 import { WompiService } from '../Wompi/wompi.service';
 import { RequestRideDto } from './dto/requestRideDto';
 import { UserRepository } from './repository/user.repository';
+import { Users } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
@@ -34,6 +36,7 @@ export class UsersService {
     //Crear usuario con email y metodo de pago
     const createUser = await this.userRepository.createUser(
       email,
+      'defaultPass',
       full_name,
       id,
       acceptance_token,
@@ -79,5 +82,10 @@ export class UsersService {
       email,
       password
     };
+  }
+
+  async createUser (userData: CreateuserDto): Promise<Users> {
+    const { email, password, full_name } = userData;
+    return await this.userRepository.createUser(email, password, full_name);
   }
 }

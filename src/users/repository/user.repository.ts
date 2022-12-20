@@ -1,6 +1,7 @@
 import { BadRequestException } from '@nestjs/common/exceptions';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../core/prisma/prisma.service';
+import { hash } from 'bcrypt';
 
 @Injectable()
 export class UserRepository {
@@ -10,9 +11,10 @@ export class UserRepository {
   del metodo de pago*/
   async createUser (
     email: string,
+    password: string,
     full_name: string,
-    idPaymentMethod: number,
-    acceptance_token: string,
+    idPaymentMethod?: number,
+    acceptance_token?: string,
   ) {
     const findinDb = await this.prisma.users.findFirst({
       where: {
@@ -21,9 +23,11 @@ export class UserRepository {
     });
     if (findinDb)
       throw new BadRequestException('El usuario con este email ya existe');
+    const hashPassword = await hash(password, 10);
     const createUser = await this.prisma.users.create({
       data: {
         full_name,
+        password: hashPassword,
         email,
         wompi_payment_source_id: idPaymentMethod,
         wompi_aceptance_token: acceptance_token,
@@ -52,4 +56,5 @@ export class UserRepository {
     if (!result) throw new BadRequestException('No se encontró un usuario');
     return result;
   }
+
 }
